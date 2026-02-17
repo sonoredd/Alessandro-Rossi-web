@@ -1,0 +1,7 @@
+{
+  "name": "Minimalist AI Portfolio",
+  "description": "A high-end, minimalist portfolio builder featuring video showcase and AI-powered bio enhancement.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
