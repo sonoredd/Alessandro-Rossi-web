@@ -14,7 +14,7 @@ const INITIAL_DATA: PortfolioData = {
   linkedin: "instagram.com/alerossidirector",
   github: "vimeo.com/alessandrorossi",
   projects: [],
-  profileImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1000&auto=format&fit=crop", 
+  profileImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1000&auto=format&fit=crop",
   logoUrl: null
 };
 
@@ -25,11 +25,10 @@ const App: React.FC = () => {
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [clickCount, setClickCount] = useState(0);
-  
+
   const profileInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
 
-  // Caricamento dati da LocalStorage all'avvio
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -41,7 +40,6 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // Salvataggio dati su LocalStorage ad ogni modifica
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }, [data]);
@@ -99,14 +97,15 @@ const App: React.FC = () => {
     return () => clearTimeout(timeout);
   };
 
-  const firstName = data.name.split(' ')[0].toUpperCase();
-  const lastName = data.name.split(' ').slice(1).join(' ').toUpperCase();
+  const nameParts = data.name.split(' ');
+  const firstName = nameParts[0].toUpperCase();
+  const lastName = nameParts.slice(1).join(' ').toUpperCase();
 
   return (
-    <div className="bg-[#000000] text-white min-h-screen selection:bg-white selection:text-black">
+    <div className="bg-black text-white min-h-screen selection:bg-white selection:text-black">
       {/* Navigation */}
-      <nav className={`fixed top-0 left-0 w-full z-[100] px-8 py-6 flex justify-between items-center mix-blend-difference transition-all duration-500 ${scrolled ? 'opacity-0 translate-y-[-100%]' : 'opacity-100 translate-y-0'}`}>
-        <div 
+      <nav className={`fixed top-0 left-0 w-full z-[100] px-8 py-6 flex justify-between items-center mix-blend-difference transition-all duration-500 ${scrolled ? 'opacity-0 -translate-y-full' : 'opacity-100 translate-y-0'}`}>
+        <div
           className="cursor-pointer min-w-[40px] h-6 flex items-center"
           onClick={() => isAdminMode && isEditing ? logoInputRef.current?.click() : handleSecretTrigger()}
         >
@@ -117,7 +116,7 @@ const App: React.FC = () => {
           )}
           <input type="file" ref={logoInputRef} className="hidden" onChange={(e) => handleFileUpload(e, 'logoUrl')} />
         </div>
-        
+
         <div className="flex items-center space-x-12">
           <div className="hidden md:flex space-x-8 text-[10px] font-bold tracking-[0.3em] uppercase opacity-50">
             <a href="#work" className="hover:text-white transition-colors">Video</a>
@@ -125,7 +124,7 @@ const App: React.FC = () => {
             <a href="#contact" className="hover:text-white transition-colors">Contact</a>
           </div>
           {isAdminMode && (
-            <button 
+            <button
               onClick={() => setIsEditing(!isEditing)}
               className="text-[9px] font-bold tracking-[0.3em] uppercase border border-white/20 px-5 py-2.5 rounded-full hover:bg-white hover:text-black transition-all bg-black/40 backdrop-blur-md"
             >
@@ -142,11 +141,11 @@ const App: React.FC = () => {
             <span className="text-[10px] font-bold tracking-[0.5em] uppercase">Visual Storytelling</span>
             <div className="w-12 h-px bg-white"></div>
           </div>
-          
+
           <h1 className="huge-title mb-12">
             {isEditing ? (
-              <input 
-                value={data.name} 
+              <input
+                value={data.name}
                 onChange={(e) => handleUpdate('name', e.target.value)}
                 className="bg-transparent border-none focus:outline-none w-full uppercase"
                 placeholder="NOME COGNOME"
@@ -164,8 +163,8 @@ const App: React.FC = () => {
             <div className="md:col-span-4 text-[10px] font-bold tracking-[0.3em] uppercase opacity-40 leading-relaxed">
               Basato in Italia.<br />
               {isEditing ? (
-                <input 
-                  value={data.role} 
+                <input
+                  value={data.role}
                   onChange={(e) => handleUpdate('role', e.target.value)}
                   className="bg-transparent border-b border-white/10 focus:outline-none w-full mt-2"
                 />
@@ -190,18 +189,18 @@ const App: React.FC = () => {
               <h2 className="text-3xl font-light italic serif">I miei lavori</h2>
             </div>
           </div>
-          
+
           <div className="flex space-x-4 md:space-x-8 px-8 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-12">
             {data.projects.map((project) => (
               <div key={project.id} className="snap-center relative">
-                <VideoProjectItem 
-                  url={project.url} 
-                  title={project.title} 
+                <VideoProjectItem
+                  url={project.url}
+                  title={project.title}
                   isEditing={isEditing}
                   onRemove={() => handleRemoveProject(project.id)}
                 />
                 {isEditing && (
-                  <input 
+                  <input
                     className="absolute bottom-24 left-8 bg-black/60 backdrop-blur-md border-none text-white text-xl font-light italic serif p-2 focus:ring-0 w-3/4"
                     value={project.title}
                     onChange={(e) => handleUpdateProjectTitle(project.id, e.target.value)}
@@ -231,7 +230,7 @@ const App: React.FC = () => {
                   <img src={data.profileImage} alt="Profile" className="w-full h-full object-cover scale-110 hover:scale-100 transition-transform duration-1000" />
                 )}
                 {isEditing && (
-                  <button 
+                  <button
                     onClick={() => profileInputRef.current?.click()}
                     className="absolute inset-0 bg-black/40 flex items-center justify-center text-[10px] uppercase font-bold tracking-widest opacity-0 hover:opacity-100 transition-opacity"
                   >
@@ -241,18 +240,18 @@ const App: React.FC = () => {
                 <input type="file" ref={profileInputRef} className="hidden" onChange={(e) => handleFileUpload(e, 'profileImage')} />
               </div>
             </div>
-            
+
             <div className="md:col-span-7 flex flex-col justify-center space-y-16">
               <div className="space-y-8">
                 <h2 className="text-[10px] font-bold tracking-[0.5em] uppercase opacity-30">Vision</h2>
                 {isEditing ? (
                   <div className="space-y-4">
-                    <textarea 
-                      value={data.bio} 
+                    <textarea
+                      value={data.bio}
                       onChange={(e) => handleUpdate('bio', e.target.value)}
                       className="w-full h-64 bg-neutral-900/50 border border-white/10 p-8 text-2xl font-light leading-relaxed focus:outline-none focus:border-white/30 transition-all text-white rounded-sm"
                     />
-                    <button 
+                    <button
                       onClick={handleEnhanceBio}
                       disabled={isEnhancing}
                       className="text-[10px] font-bold tracking-[0.3em] uppercase bg-white text-black px-8 py-4 hover:bg-neutral-200 disabled:opacity-50 transition-all"
@@ -293,14 +292,14 @@ const App: React.FC = () => {
         <section id="contact" className="py-48 border-t border-white/5 px-8">
           <div className="flex flex-col items-center text-center space-y-12">
             <h2 className="text-[10px] font-bold tracking-[0.5em] uppercase opacity-30">Iniziamo un progetto</h2>
-            <a 
-              href={`mailto:${data.email}`} 
+            <a
+              href={`mailto:${data.email}`}
               className="hover:text-neutral-500 transition-colors duration-500 lowercase font-black tracking-tighter"
               style={{ fontSize: 'clamp(1.5rem, 5.5vw, 4rem)' }}
             >
               {data.email.split('@')[0]}<span className="opacity-20">@</span>{data.email.split('@')[1]}
             </a>
-            
+
             <div className="pt-24 flex flex-col md:flex-row justify-between w-full opacity-20 text-[9px] font-bold tracking-[0.3em] uppercase">
               <p>© {new Date().getFullYear()} {data.name} Studio</p>
               <p>Basato a Milano / Available Worldwide</p>
@@ -315,7 +314,7 @@ const App: React.FC = () => {
         <div className="fixed inset-0 z-[200] bg-black/90 backdrop-blur-md flex items-center justify-center">
           <div className="flex flex-col items-center space-y-10">
             <div className="w-16 h-px bg-white/10 relative overflow-hidden">
-               <div className="absolute inset-0 bg-white w-full h-full -translate-x-full animate-[shimmer_2s_infinite]"></div>
+               <div className="absolute inset-0 bg-white w-full h-full -translate-x-full animate-shimmer"></div>
             </div>
             <span className="text-[9px] font-bold tracking-[1em] uppercase animate-pulse">Evolvendo il tuo messaggio</span>
           </div>
@@ -325,6 +324,9 @@ const App: React.FC = () => {
       <style>{`
         @keyframes shimmer {
           100% { transform: translateX(100%); }
+        }
+        .animate-shimmer {
+          animation: shimmer 2s infinite;
         }
         .no-scrollbar::-webkit-scrollbar {
           display: none;
